@@ -18,50 +18,50 @@ function main() {
     cabecalho("COMPRADOR DE IPHONE");
 
     // Entrada: Nome do Usuário
-    fala_do_programa(`Meu nome é ${nome_do_bot} e irei lhe ajudar a comprar o seu iPhone. Qual é seu nome?`);
+    mostrar_mensagem(`Meu nome é ${nome_do_bot} e irei lhe ajudar a comprar o seu iPhone. Qual é seu nome?`);
     let nome_do_usuario = question("Nome: ");
     if (nome_do_usuario == "") {
-        fala_do_programa("Não quer dizer seu nome? Tudo bem, vou te chamar de Joana então.")
+        mostrar_mensagem("Não quer dizer seu nome? Tudo bem, vou te chamar de Joana então.")
         nome_do_usuario = "Joana";
     }
     
-    fala_do_programa(`Será um prazer ajudar você, ${nome_do_usuario}!`);
+    mostrar_mensagem(`Será um prazer ajudar você, ${nome_do_usuario}!`);
 
     // Entrada: Valor do iPhone
-    fala_do_programa("Insira o valor do iPhone desejado.")
+    mostrar_mensagem("Insira o valor do iPhone desejado.")
     const valor = perguntar_numero("Valor");
 
     // Fail Fast: Valor negativo
     if (valor < 0) {
-        fala_do_programa("Valor do iPhone inválido.")
+        mostrar_mensagem("Valor do iPhone inválido.")
         encerramento();
         return
     }
 
     // Fail Fast: Valor zerado
     if (valor == 0) {
-        fala_do_programa("Está de brincadeira? iPhone de graça? Vai sonhando!");
+        mostrar_mensagem("Está de brincadeira? iPhone de graça? Vai sonhando!");
         encerramento();
         return
     }
 
     // Obter modelo do iPhone com base no valor inserido
     const modelo_iphone = obter_modelo_iphone(valor);
-    fala_do_programa(`Entendi! Trata-se de um ${modelo_iphone}, de R$${valor.toFixed(2)}.`);
+    mostrar_mensagem(`Entendi! Trata-se de um ${modelo_iphone}, de R$${valor.toFixed(2)}.`);
 
     // Entrada: Forma de Pagamento
-    fala_do_programa("Insira a forma de pagamento:\n1 - PIX\n2 - Cartão de Débito\n3 - Entrada + Cartão de Crédito");
+    mostrar_mensagem("Insira a forma de pagamento:\n1 - PIX\n2 - Cartão de Débito\n3 - Entrada + Cartão de Crédito");
     const forma_de_pagamento = perguntar_numero("Forma de pagamento");
 
     // Fail Fast: Forma de pagamento diferente das propostas
     if (forma_de_pagamento <= 0 || forma_de_pagamento > 3) {
-        fala_do_programa("Método de compra inválido!");
+        mostrar_mensagem("Método de compra inválido!");
         encerramento();
         return
     }
 
     const forma_de_pagamento_string = obter_forma_de_pagamento(forma_de_pagamento);
-    fala_do_programa(`Beleza! Forma de pagamento selecionada: ${forma_de_pagamento_string}`)
+    mostrar_mensagem(`Beleza! Forma de pagamento selecionada: ${forma_de_pagamento_string}`)
 
     // Processamento:
     let valor_a_pagar = valor;
@@ -86,28 +86,28 @@ function main() {
         return
     } else if (forma_de_pagamento == 3) {
         // Entrada + Prestações
-        fala_do_programa("Para iniciarmos, insira o valor da entrada desejada, caso queira.");
+        mostrar_mensagem("Para iniciarmos, insira o valor da entrada desejada, caso queira.");
         let entrada = perguntar_numero("Entrada");
 
         // Tratamento de erro: Entradas inválidas - pagamento sem entrada.
         if (entrada < 0 || entrada == undefined) {
-            fala_do_programa(`Essa entrada não é válida. Vamos fazer sem entrada, portanto.`);
+            mostrar_mensagem(`Essa entrada não é válida. Vamos fazer sem entrada, portanto.`);
             entrada = 0;
         } else if (entrada == 0) {
-            fala_do_programa("Ok! Sem entrada, então.");
+            mostrar_mensagem("Ok! Sem entrada, então.");
         } else if (entrada > valor) {
             // Tratamento de erro: Entrada maior que o valor do produto - sugerir entrada de 10% do valor do produto.
-            fala_do_programa(`Não podemos fazer uma entrada maior que o valor do ${modelo_iphone}.`);
-            fala_do_programa(`Vamos fazer uma entrada de 10% do valor do produto, que tal? Seria uma entrada de R$${(valor * 0.10).toFixed(2)}`);
+            mostrar_mensagem(`Não podemos fazer uma entrada maior que o valor do ${modelo_iphone}.`);
+            mostrar_mensagem(`Vamos fazer uma entrada de 10% do valor do produto, que tal? Seria uma entrada de R$${(valor * 0.10).toFixed(2)}`);
             entrada = valor * 0.10;
         }
         
         if (entrada > 0) {
             // Caso haja entrada:
-            fala_do_programa(`Em quantas parcelas você quer os R$${(valor - entrada).toFixed(2)} restantes? (em até 12x)`)
+            mostrar_mensagem(`Em quantas parcelas você quer os R$${(valor - entrada).toFixed(2)} restantes? (em até 12x)`)
         } else {
             // Pagamento sem entrada:
-            fala_do_programa(`Em quantas parcelas você quer dividir o valor total (R$${(valor - entrada).toFixed(2)})? (em até 12x)`)
+            mostrar_mensagem(`Em quantas parcelas você quer dividir o valor total (R$${(valor - entrada).toFixed(2)})? (em até 12x)`)
         }
         
         // Entrada: Obter número de parcelas
@@ -115,28 +115,28 @@ function main() {
         
         // Fail fast: número de parcelas inválido
         if (numero_de_parcelas === undefined) {
-            fala_do_programa("Número de parcelas inválido.")
+            mostrar_mensagem("Número de parcelas inválido.")
             encerramento();
             return
         }
 
         // Fail fast: número negativo de parcelas
         if (numero_de_parcelas < 0) {
-            fala_do_programa("Como assim? Você quer parcelar em vezes negativas?");
+            mostrar_mensagem("Como assim? Você quer parcelar em vezes negativas?");
             encerramento();
             return
         }
 
         // Fail fast: número de parcelas igual a zero
         if (numero_de_parcelas == 0) {
-            fala_do_programa("Mas você nao queria parcelar? Tente novamente selecionando outra forma de pagamento.");
+            mostrar_mensagem("Mas você nao queria parcelar? Tente novamente selecionando outra forma de pagamento.");
             encerramento();
             return
         }
 
         // Tratamento: Limite máximo de parcelas é igual a 12.
         if (numero_de_parcelas > 12) {
-            fala_do_programa(`Eu entendo que você queira dividir em ${numero_de_parcelas}x, mas o máximo que podemos fazer é em 12x, ok?`);
+            mostrar_mensagem(`Eu entendo que você queira dividir em ${numero_de_parcelas}x, mas o máximo que podemos fazer é em 12x, ok?`);
             numero_de_parcelas = 12;
         }
 
@@ -148,20 +148,20 @@ function main() {
 
         if (entrada <= 0) {
             // Sem entrada
-            fala_do_programa(`Certo, ${nome_do_usuario}, dividindo o valor total do ${modelo_iphone}, de R$${valor_financiado.toFixed(2)} em ${numero_de_parcelas}x, você pagará suaves prestações de R$${valor_parcela.toFixed(2)}.`);
-            fala_do_programa(`No final de tudo, você estará pagando R$${(entrada + valor_acrescido).toFixed(2)}.`);
+            mostrar_mensagem(`Certo, ${nome_do_usuario}, dividindo o valor total do ${modelo_iphone}, de R$${valor_financiado.toFixed(2)} em ${numero_de_parcelas}x, você pagará suaves prestações de R$${valor_parcela.toFixed(2)}.`);
+            mostrar_mensagem(`No final de tudo, você estará pagando R$${(entrada + valor_acrescido).toFixed(2)}.`);
             const sugestao = obter_sugestao_de_compra(diferenca);
-            fala_do_programa(`Você estará pagando um juros total no valor de R$${diferenca.toFixed(2)}. Com esse valor a mais, você poderia comprar ${sugestao}.`);
+            mostrar_mensagem(`Você estará pagando um juros total no valor de R$${diferenca.toFixed(2)}. Com esse valor a mais, você poderia comprar ${sugestao}.`);
         } else {
             // Com entrada
-            fala_do_programa(`Certo, ${nome_do_usuario}, pagando uma entrada de R$${entrada.toFixed(2)}, você pagará o restante (R$${valor_financiado.toFixed(2)}) em ${numero_de_parcelas} parcelas de R$${valor_parcela.toFixed(2)}.`)
-            fala_do_programa(`No final de tudo, você estará pagando R$${(entrada + valor_acrescido).toFixed(2)}.`);
+            mostrar_mensagem(`Certo, ${nome_do_usuario}, pagando uma entrada de R$${entrada.toFixed(2)}, você pagará o restante (R$${valor_financiado.toFixed(2)}) em ${numero_de_parcelas} parcelas de R$${valor_parcela.toFixed(2)}.`)
+            mostrar_mensagem(`No final de tudo, você estará pagando R$${(entrada + valor_acrescido).toFixed(2)}.`);
             const sugestao = obter_sugestao_de_compra(diferenca);
-            fala_do_programa(`Você estará pagando um juros total no valor de R$${diferenca.toFixed(2)}. Com esse valor a mais, você poderia comprar ${sugestao}.`);
+            mostrar_mensagem(`Você estará pagando um juros total no valor de R$${diferenca.toFixed(2)}. Com esse valor a mais, você poderia comprar ${sugestao}.`);
         }
 
         // Encerramento
-        fala_do_programa(`Obrigado! Espero ter sido útil!`);
+        mostrar_mensagem(`Obrigado! Espero ter sido útil!`);
         encerramento();
     }
 }
@@ -170,7 +170,7 @@ function cabecalho(_cab) {
     console.log(`### ${_cab} ###`);
 }
 
-function fala_do_programa(_mensagem) {
+function mostrar_mensagem(_mensagem) {
     console.log(`\n${nome_do_bot}: ${_mensagem}`);
 }
 
@@ -223,14 +223,14 @@ function obter_forma_de_pagamento(_forma) {
 }
 
 function apresentar_pagamento(_valor, _desconto, _modelo, _preco_original, _forma){
-    fala_do_programa(`Sendo assim, pagando por ${_forma}, o seu ${_modelo} que normalmente custaria R$${_preco_original.toFixed(2)} estará custando R$${_valor.toFixed(2)}, com um desconto de R$${_desconto.toFixed(2)}.`);
+    mostrar_mensagem(`Sendo assim, pagando por ${_forma}, o seu ${_modelo} que normalmente custaria R$${_preco_original.toFixed(2)} estará custando R$${_valor.toFixed(2)}, com um desconto de R$${_desconto.toFixed(2)}.`);
 
     const sugestao = obter_sugestao_de_compra(_desconto);
-    fala_do_programa(`Com esse valor economizado, você pode comprar ${sugestao}.`);
+    mostrar_mensagem(`Com esse valor economizado, você pode comprar ${sugestao}.`);
 }
 
 function pedir_pix() {
-    fala_do_programa("Por favor, efetue o pagamento. Chave PIX: patrocinioluisf@gmail.com");
+    mostrar_mensagem("Por favor, efetue o pagamento. Chave PIX: patrocinioluisf@gmail.com");
 }
 
 function obter_sugestao_de_compra(_valor) {

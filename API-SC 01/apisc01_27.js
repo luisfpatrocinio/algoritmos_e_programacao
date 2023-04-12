@@ -36,6 +36,7 @@
 
  function main() {
     // Entrada:
+    //#region Pedir Dados
     const duracao_do_curso  = perguntar_numero("Duração do curso, em anos");
     if (duracao_do_curso < 0 || duracao_do_curso % 0.50 != 0) {
         alerta_fail_fast("Duração do curso inválida!");
@@ -48,11 +49,14 @@
         return;
     }
 
-    const taxa_selic        = perguntar_numero("Taxa SELIC");
+    let taxa_selic        = perguntar_numero("Taxa SELIC");
     if (taxa_selic < 0) {
         alerta_fail_fast("Valor da TAXA SELIC inválido");
         return;
+    } else if (taxa_selic >= 1) {
+        taxa_selic / 100;
     }
+    console.log(`Taxa SELIC de ${taxa_selic}%.`)
 
     const salario_minimo    = perguntar_numero("Salário Mínimo atual");
     if (salario_minimo < 0) {
@@ -82,8 +86,10 @@
         alerta_fail_fast("Semestre de início de curso inválido");
         return
     }
+    //#endregion
 
     // Processamento:
+    console.log("");
     console.log("PROCESSSANDO INFORMAÇÕES...");
     console.log("");
 
@@ -97,9 +103,9 @@
     console.log(`O valor a ser financiado é de R$${valor_financiamento.toFixed(2)}.`);
 
     // Valor total dos Juros
-    const renda_em_salarios = obter_numero_de_salarios_minimos(renda_familiar, salario_minimo);
-    const juros_total = calcular_juros_total(valor_financiamento, duracao_do_curso, renda_em_salarios, taxa_selic);
-    console.log(`O valor total dos juros é de R$${juros_total.toFixed(2)}.`);
+    //const renda_em_salarios = obter_numero_de_salarios_minimos(renda_familiar, salario_minimo);
+    const juros_total = calcular_juros_total(valor_financiamento, taxa_selic, renda_familiar, tamanho_familia, salario_minimo, duracao_do_curso);
+    console.log(`O valor total dos juros é de R$${juros_total.toFixed(2)}.\n --- O valor do financiamento foi de ${valor_financiamento}`);
 
     // Valor total a pagar
     const valor_total = valor_financiamento + juros_total;
@@ -122,13 +128,14 @@
     console.log(`O valor da renda mínima necessária para iniciar o pagamento é de R$${renda_minima.toFixed(2)}.`);
 
     // Ano de início e ano de conclusão:
-    const ano_final = ano_inicio + Math.floor(duracao_do_curso);
+    let ano_final = ano_inicio + Math.floor(duracao_do_curso);
     let semestre_final;
     if (duracao_do_curso % 1 > 0) {
         if (semestre_inicio == 1) {
             semestre_final = 2;
         } else {
             semestre_final = 1;
+            ano_final = ano_final + 1;
         }
     } else {
         semestre_final = semestre_inicio;
@@ -138,9 +145,11 @@
 
 function checar_habilitado(_renda, _tamanho, _salario) {
     // a renda precisa ser até 3 salarios minimos por pessoa
-    return (_renda <= _tamanho * _salario * 3)
+    const renda_por_pessoa = _renda / _tamanho;
+    return (renda_por_pessoa <= _salario * 3)
 }
 
+// Calcular valor do curso
 function obter_valor_financiamento(_mensalidade, _duracao) {
     // transformar a duração em anos para meses
     const meses = converter_anos_para_meses(_duracao);
@@ -157,19 +166,29 @@ function obter_numero_de_salarios_minimos(_renda, _salario) {
     return _renda / _salario;
 }
 
-function calcular_juros_total(_valor, _anos, _salarios, _taxaSelic) {
+function calcular_juros_total(_valor, _taxaSelic, _renda, _tamanho, _salario_minimo, _anos) {
+    const renda_por_pessoa = _renda / _tamanho;
+    const taxa = calcular_taxa(renda_por_pessoa, _taxaSelic, _salario_minimo);
+    const juros = _valor * taxa * _anos;
+
+    return juros;
+
+    //return  _valor * _multiplicador * _anos;
+}
+
+function calcular_taxa(_renda_por_pessoa, _taxaSelic, _salario_minimo) {
     let _multiplicador;
-    if (_salarios < 1.5) {
+    if (_renda_por_pessoa < 1.5 * _salario_minimo) {
         _multiplicador = 0.10 * _taxaSelic;
-    } else if (_salarios < 2) {
+    } else if (_renda_por_pessoa < 2 * _salario_minimo) {
         _multiplicador = 0.15 * _taxaSelic;
-    } else if (_salarios < 2.5) {
+    } else if (_renda_por_pessoa < 2.5 * _salario_minimo) {
         _multiplicador = 0.20 * _taxaSelic;
     } else {
         _multiplicador = 0.25 * _taxaSelic;
     }
 
-    return _valor + _valor * _multiplicador * Math.floor(_anos);
+    return _multiplicador
 }
 
 function obter_valor_pago_durante(_duracao) {

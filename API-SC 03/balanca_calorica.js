@@ -196,6 +196,7 @@ function mostrar_mensagem(_mensagem) {
         exibirProximoCaractere();
       });
 }
+
 //console.log(`\n${nome_do_bot}: ${_mensagem}`);
 
 function perguntar_numero(_pergunta) {
