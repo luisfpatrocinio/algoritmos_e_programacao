@@ -3,10 +3,10 @@
 Aritmética que tem por valor inicial A0 e razão R.
  */
 
-import { cabecalho, exibir_texto_sem_pular_linha, formatar_numero, mostrar_mensagem, perguntar_numero } from "./utils.js";
+import { exibir_cabecalho, exibir_texto_sem_pular_linha, formatar_numero, mostrar_mensagem, perguntar_numero } from "../utils.js";
 
 async function main() {
-    cabecalho("3. Progressão Aritmética")
+    exibir_cabecalho("3. Progressão Aritmética")
     await mostrar_mensagem("Insira um número inicial.");
     const A0 = perguntar_numero("Número inicial");
     await mostrar_mensagem(`Iremos começar de ${A0} até que número?`);
@@ -32,7 +32,7 @@ async function main() {
 
     console.log();
 
-    cabecalho("Fim do Programa")
+    exibir_cabecalho("Fim do Programa")
 }
 
 main();

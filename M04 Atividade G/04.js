@@ -2,11 +2,11 @@
 Geométrica que tem por valor inicial A0 e razão R.
 */
 
-import { cabecalho, exibir_texto_sem_pular_linha, formatar_numero, mostrar_mensagem, perguntar_numero } from "./utils.js";
+import { exibir_cabecalho, exibir_texto_sem_pular_linha, formatar_numero, mostrar_mensagem, perguntar_numero } from "../utils.js";
 
 
 async function main() {
-    cabecalho("04. Progressão Geométrica");
+    exibir_cabecalho("04. Progressão Geométrica");
 
     await mostrar_mensagem("Insira um número inicial.")
 
@@ -25,7 +25,7 @@ async function main() {
     
     console.log();
 
-    cabecalho("Fim do Programa");
+    exibir_cabecalho("Fim do Programa");
 }
 
 main();

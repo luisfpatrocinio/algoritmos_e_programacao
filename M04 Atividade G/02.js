@@ -1,4 +1,4 @@
-import { cabecalho, definir_nome_bot, exibir_texto_sem_pular_linha, formatar_numero, mostrar_mensagem, perguntar_numero } from "./utils.js";
+import { cabecalho, definir_nome_bot, exibir_texto_sem_pular_linha, formatar_numero, mostrar_mensagem, perguntar_numero } from "../utils.js";
 
 async function main() {
     cabecalho("2. Listar Números Pares");

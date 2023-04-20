@@ -1,4 +1,4 @@
-import { definir_nome_bot, mostrar_mensagem, cabecalho, perguntar_numero, exibir_texto_sem_pular_linha, obter_largura_da_tela, formatar_numero } from "./utils.js";
+import { definir_nome_bot, mostrar_mensagem, cabecalho, perguntar_numero, exibir_texto_sem_pular_linha, obter_largura_da_tela, formatar_numero } from "../utils.js";
 
 /**
  * 1. Leia N e escreva todos os números inteiros de 1 a N.
