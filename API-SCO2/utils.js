@@ -40,7 +40,7 @@ export async function perguntar_numero(_pergunta) {
     let numero = Number(question(`>>> ${_pergunta}: `));
     while (isNaN(numero)) {
         await mostrar_mensagem(`O valor inserido não é um número.`);
-        let numero = Number(question(`>>> ${_pergunta}: `));
+        numero = Number(question(`>>> ${_pergunta}: `));
     }
     return numero;
 }
@@ -49,7 +49,7 @@ export async function perguntar_numero_positivo(_pergunta) {
     let numero = await perguntar_numero(_pergunta);
     while (numero < 0) {
         await mostrar_mensagem(`Insira um número positivo.`);
-        let numero = await perguntar_numero(_pergunta);
+        numero = await perguntar_numero(_pergunta);
     }
     return numero;
 }
