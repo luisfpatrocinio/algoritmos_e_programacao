@@ -1,13 +1,24 @@
+# Idade em Dias
+
 def main():
-    dias = int(input())
-    
-    anos = dias // 365
-    dias %= 365
+    # Entrada
+    idade = int(input())
+    # Processamento
+    anos = calcular_anos(idade)
+    meses = calcular_meses(idade)
+    dias = calcular_dias(idade)
+    # Saída
+    print(f"{anos} ano(s)")
+    print(f"{meses} mes(es)")
+    print(f"{dias} dia(s)")
 
-    meses = dias // 30
-    dias %= 30
+def calcular_anos(idade):
+    return idade // 365
 
-    print(f'{anos} ano(s)\n{meses} mes(es)\n{dias} dia(s)')
+def calcular_meses(idade): 
+    return (idade % 365) // 30
 
+def calcular_dias(idade):
+    return (idade % 365) % 30  
 
 main()
