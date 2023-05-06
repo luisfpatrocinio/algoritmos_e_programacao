@@ -2,9 +2,8 @@
 
 def main():
     # Entrada:
-    a = float(input())
-    b = float(input())
-    c = float(input())
+    a, b, c = map(float, input().split())
+
     # Processamento:
     area_triangulo = calcular_area_triangulo(a, c)
     area_circulo = calcular_area_circulo(c)

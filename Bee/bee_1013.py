@@ -2,9 +2,7 @@
 
 def main():
     # Entrada:
-    a = int(input())
-    b = int(input())
-    c = int(input())
+    a, b, c = map(float, input().split())
     # Processamento:
     maior = calcular_maior(a, b, c)
     # Saída:
@@ -13,6 +11,6 @@ def main():
 def calcular_maior(a, b, c):
     maiorAB = (a + b + abs(a - b)) / 2
     maior = (maiorAB + c + abs(maiorAB - c)) / 2
-    return maior
+    return int(maior)
 
 main()
