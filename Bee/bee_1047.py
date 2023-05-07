@@ -1,22 +1,27 @@
 def main():
-    # Entrada: obter horaInicial, minutoInicial, horaFinal, minutoFinal numa lista de inteiros
-    horaInicial, minutoInicial, horaFinal, minutoFinal = map(int, input().split())
+    # Entrada
+    hora_inicial, minuto_inicial, hora_final, minuto_final = map(int, input().split())
 
-    # Acabando no mesmo dia
-    if (horaInicial < horaFinal):
-        horas = horaFinal - horaInicial
-    # Acabando no dia seguinte
-    elif (horaInicial > horaFinal):
-        horas = 24 - horaInicial + horaFinal
+    # Processamento
+    if (hora_inicial < hora_final):
+        duracao_hora = hora_final - hora_inicial
     else:
-        horas = 24
-    
-    if (minutoInicial > minutoFinal):  
-        horas -= 1
-        minutos = 60 - minutoInicial + minutoFinal
-    else:
-        minutos = minutoFinal - minutoInicial
+        duracao_hora = (24 - hora_inicial) + hora_final
 
-    print(f"O JOGO DUROU {horas} HORA(S) E {minutos} MINUTO(S)")
+    if (minuto_inicial < minuto_final):
+        duracao_minuto = minuto_final - minuto_inicial
+    else:
+        duracao_minuto = (60 - minuto_inicial) + minuto_final
+        duracao_hora -= 1
+
+    if (duracao_minuto == 60):
+        duracao_minuto = 0
+        duracao_hora += 1
+
+    if (duracao_hora == 24 and duracao_minuto > 0):
+        duracao_hora = 0
+
+    # Saída
+    print(f"O JOGO DUROU {duracao_hora} HORA(S) E {duracao_minuto} MINUTO(S)")
 
 main()
