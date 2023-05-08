@@ -19,7 +19,6 @@ def main(teste = False):
         
     # Iniciando contador de carries = 0.
     carries = 0
-    
     contador = 0
     while (contador < len(valores)):
         # Agora, podemos comparar os números dígito a dígito
@@ -53,5 +52,4 @@ def main(teste = False):
         contador += 1
         
 
-
-main(False)
+main(True)
