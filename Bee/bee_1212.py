@@ -19,15 +19,15 @@ def main(teste = False):
         
     # Iniciando contador de carries = 0.
     carries = 0
-    contador = 0
-    while (contador < len(valores)):
+    # while (contador < len(valores)):
+    for cont in range(len(valores)):
         # Agora, podemos comparar os números dígito a dígito
         # Percorrer todos os dígitos:
         carries = 0
         carry_anterior = 0
-        x = valores[contador][0]
-        y = valores[contador][1]
-        if teste: print(f"Número {contador}: {x} e {y}")
+        x = valores[cont][0]
+        y = valores[cont][1]
+        if teste: print(f"Número {cont}: {x} e {y}")
         for i in range(len(x), 0, -1):
             # Se a soma de x + y for > 9, então temos um carry
             # Coletar soma do dígito:
@@ -49,7 +49,6 @@ def main(teste = False):
         else:
             print(f"{carries} carry operations.")
 
-        contador += 1
         
 
 main(True)

@@ -5,9 +5,9 @@ def main():
     # Para cada teste:
     for i in range(n):
         a, b = input().split()
-        # b corresponde aos últimos dígitos de a?
-        tamanho = len(b)
+        # Obter a String A sem B
         string_a_sem_b = subtrair_string(a, b)
+        # Concatenar resultado com B e verificar se é igual a string original
         if (string_a_sem_b + b == a):
             print("encaixa")
         else:
