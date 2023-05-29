@@ -9,13 +9,17 @@ def main():
         print(texto)
 
 def criptografar(texto):
-    # Na primeira passada, somente caracteres que sejam letras minúsculas e maiúsculas devem ser deslocadas 3 posições para a direita, segundo a tabela ASCII: letra 'a' deve virar letra 'd', letra 'y' deve virar caractere '|' e assim sucessivamente.
+    # Na primeira passada, somente caracteres que sejam letras minúsculas e maiúsculas devem 
+    # ser deslocadas 3 posições para a direita, segundo a tabela ASCII: letra 'a' deve virar 
+    # letra 'd', letra 'y' deve virar caractere '|' e assim sucessivamente.
     texto = deslocar_caracteres(texto, 3)
     #print(texto)
     # Na segunda passada, a linha deverá ser invertida.
     texto = inverter_texto(texto)
     #print(texto)
-    # Na terceira e última passada, todo e qualquer caractere a partir da metade em diante (truncada) devem ser deslocados uma posição para a esquerda na tabela ASCII. Neste caso, 'b' vira 'a' e 'a' vira '`'.
+    # Na terceira e última passada, todo e qualquer caractere a partir da metade em diante 
+    # (truncada) devem ser deslocados uma posição para a esquerda na tabela ASCII. 
+    # Neste caso, 'b' vira 'a' e 'a' vira '`'.
     texto = deslocar_metade(texto, -1)
     #print(texto)
     return texto   
