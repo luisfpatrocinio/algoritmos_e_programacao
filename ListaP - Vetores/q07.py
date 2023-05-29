@@ -12,7 +12,7 @@ def main():
 def criar_vetor_b(vetor):
     nova_colecao = []
     for i in range(len(vetor)):
-        if vetor[i] % 2 == 0: # é par
+        if int(vetor[i]) % 2 == 0: # é par
             nova_colecao.append(0)
         else:
             nova_colecao.append(1)
