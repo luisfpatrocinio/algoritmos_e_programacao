@@ -12,6 +12,8 @@
   "type": "module",
   "dependencies": {
     "chalk": "^5.2.0",
-    "readline-sync": "^1.4.10"
+    "fs": "^0.0.1-security",
+    "readline-sync": "^1.4.10",
+    "ulidx": "^2.0.0"
   }
 }
