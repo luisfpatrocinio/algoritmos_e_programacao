@@ -189,7 +189,7 @@ function atualizarMontadoras() {
         while (true) {
             opcao = obter_numero(_header);
             if (opcao < 0 || opcao > montadoras.length) {
-                process.stdout.write(`\r\x1b[1A\r                                                            \r`);
+                apagarUltimaLinha();
             } else if (opcao == 0) {
                 return;
             } else {
@@ -217,15 +217,16 @@ function atualizarMontadoras() {
             var _header = `Opcao: `;
             _opcao = obter_numero(_header);
             
-            process.stdout.write(`\x1b[1A${_header} ${_opcao} - ${_opcoes[_opcao]}`);
-            console.log();
-            console.log();
+
+            var _txt = _opcoes[_opcao] == undefined ? "Opcao invalida." : _opcoes[_opcao];
+            alterarOpcaoAcima(_header, _opcao, _txt);
 
             switch (_opcao) {
                 case 1:
                     mostrar_texto(`Nome atual: ${montadoraSelecionada.nome}`);
                     let _nome = obter_texto("Digite o novo nome: ");
                     montadoras[opcao - 1].nome = _nome;
+                    mostrar_texto_centralizado(`Nome atualizado com sucesso!`);
                     _podeSair = true;
                     break;
                 case 2:
@@ -233,18 +234,21 @@ function atualizarMontadoras() {
                     let _nacionalidade = obter_texto("Digite a nova nacionalidade: ");
                     montadoras[opcao - 1].nacionalidade = _nacionalidade;
                     _podeSair = true;
+                    mostrar_texto_centralizado(`Nacionalidade atualizada com sucesso!`);
                     break;
                 case 3:
                     mostrar_texto(`Ano atual: ${montadoraSelecionada.anoFundacao}`);
                     let _anoFundacao = obter_numero("Digite o novo ano de fundacao: ");
                     montadoras[opcao - 1].anoFundacao = _anoFundacao;
                     _podeSair = true;
+                    mostrar_texto_centralizado(`Ano de fundacao atualizado com sucesso!`);
                     break;
                 case 0:
                     _podeSair = true;
                     break;
                 default:
-                    mostrar_texto("Opcao inválida.");
+                    apagarUltimaLinha();
+                    apagarUltimaLinha();
                     break;  
             }
         }
@@ -267,9 +271,19 @@ function removerMontadoras() {
         var _header = `Opcao: `;
         opcao = obter_numero(_header);
 
-        process.stdout.write(`\x1b[1A${_header} ${opcao} - ${montadoras[opcao - 1].nome}`);
-        console.log();
-        console.log();
+        while (opcao < 0 || opcao > montadoras.length) {
+            apagarUltimaLinha();
+            opcao = obter_numero(_header);
+        }
+
+        if (opcao == 0) {
+            subirLinha();
+            process.stdout.write(`${_header} ${opcao} - ${"Saindo..."}`);
+            console.log();
+            return;
+        }
+
+        alterarOpcaoAcima(_header, opcao, montadoras[opcao - 1].nome);
 
         mostrar_texto(`Tem certeza que deseja remover a montadora ${montadoras[opcao -1].nome}?}`);
         var _opcoes = ["Sim", "Nao"];
@@ -277,9 +291,7 @@ function removerMontadoras() {
         mostrar_texto(`2 - ${_opcoes[1]}`);
         let _opcao = obter_numero(_header);
 
-        process.stdout.write(`\x1b[1A${_header} ${_opcao} - ${_opcoes[_opcao - 1]}`);
-        console.log();
-        console.log();
+        alterarOpcaoAcima(_header, _opcao, _opcoes[_opcao - 1]);
 
         switch (_opcao) {
             case 1:
@@ -299,6 +311,13 @@ function removerMontadoras() {
     }
 }
 
+function alterarOpcaoAcima(_header, _opcao, nomeDaOpcao) {
+    process.stdout.write(`\x1b[1A${_header} ${_opcao} - ${nomeDaOpcao}`);
+    console.log();
+    console.log();
+}
+
+
 function salvarMontadoras(montadoras) {
     //let montadoras = lerMontadoras();
     let _texto = "";
@@ -312,6 +331,14 @@ function textoDebug(_texto) {
     if (DEBUG) {
         console.log(`>>> ${_texto} `);
     }
+}
+
+function apagarUltimaLinha() {
+    process.stdout.write(`\r\x1b[1A\r                                                            \r`);
+}
+
+function subirLinha() {
+    process.stdout.write(`\x1b[1A`);
 }
 
 main(DEBUG);
