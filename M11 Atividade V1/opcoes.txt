@@ -1,4 +1,7 @@
 Criar Montadora#criarMontadora
 Listar Montadoras#listarMontadoras
-Atualizar Montadoras#atualizarMontadoras
-Remover Montadoras#removerMontadoras
+Atualizar Montadora#atualizarMontadora
+Remover Montadora#removerMontadora
+Adicionar Modelo#criarModelo
+Listar Modelos#listarModelos
+Remover Modelo#removerModelo
