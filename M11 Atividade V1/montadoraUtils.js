@@ -101,15 +101,14 @@ export function lerModelos() {
                 nome: _modeloAtual[MODELO_NOME],
                 montadoraID: _modeloAtual[MODELO_MONTADORA_ID],
                 valorReferencia: _modeloAtual[MODELO_VALOR_REF],
-                motor: _modeloAtual[MODELO_MOTOR],
-                turbo: _modeloAtual[MODELO_TURBO],
-                automatico: _modeloAtual[MODELO_AUTOMATICO]
+                motor: Number(_modeloAtual[MODELO_MOTOR]).toFixed(1),
+                turbo: _modeloAtual[MODELO_TURBO] == "true" ? true : false,
+                automatico: _modeloAtual[MODELO_AUTOMATICO] == "true" ? true : false,
             }
             // Adicionar o objeto no vetor de montadoras
             modelos[i] = _registroModelo;
         }
     }
-
     return modelos
 }
 

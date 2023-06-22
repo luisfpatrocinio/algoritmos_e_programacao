@@ -12,16 +12,19 @@ import { limpar_terminal,
  } from "./generalUtils.js";
 import { ulid } from "ulidx";
 import { salvarMontadoras, lerMontadoras, salvarModelos, lerModelos,
-    alterarOpcaoAcima, adicionarModelo, removerModeloDoArquivo } from "./montadoraUtils.js";
+    alterarOpcaoAcima, adicionarModelo, removerModeloDoArquivo, subirLinha, apagarUltimaLinha } from "./montadoraUtils.js";
 const arquivoMenu = "opcoes.txt";
 
 // Principal:
 export function mostrarMenu(_selecionada) {
     const opcoes = lerOpcoesDoMenu();
-    mostrar_texto_centralizado("Menu");
+    cabecalho("Menu PatroCars")
 
     let numeroDeMontadoras = tam(lerMontadoras());
-    mostrar_texto_centralizado(`${numeroDeMontadoras} montadoras cadastradas.`)
+
+    if (numeroDeMontadoras > 0) {
+        mostrar_texto_centralizado(`${numeroDeMontadoras} montadoras cadastradas.`)
+    }
     let montadoras = lerMontadoras();
 
     let _qntPontos = obter_largura_da_tela() / 10;
@@ -215,8 +218,14 @@ export function atualizarMontadora() {
 }
 
 export function removerMontadora() {
-    mostrar_texto("Qual montadora deseja remover? ");
     const montadoras = lerMontadoras();
+
+    if (montadoras.length == 0) {
+        mostrar_texto_centralizado("Nao ha montadoras cadastradas.");
+        return;
+    }
+
+    mostrar_texto("Qual montadora deseja remover? ");
     for (let i = 0; i < montadoras.length; i++) {
         mostrar_texto(`${i + 1} - ${montadoras[i].nome}`);
     }
@@ -278,30 +287,35 @@ export function criarModelo() {
         }
         mostrar_texto(`0 - Sair`)
 
-        var opcao = -1;
+        var _opcao = -1;
         var montadoraSelecionada = -1;
         var _header = "Opcao: "
 
-        while (opcao < 0 || opcao > _montadoras.length) {
-            opcao = obter_numero(_header);
-        }
-        
-        if (opcao == 0) {
-            alterarOpcaoAcima(_header, opcao, "Cancelando...")
-            return
+        while (_opcao < 0 || _opcao > _montadoras.length) {
+            _opcao = obter_numero(_header);
         }
 
         // Referencia do Registro da Montadora
-        montadoraSelecionada = _montadoras[opcao - 1];
+        montadoraSelecionada = _montadoras[_opcao - 1];
+        
+        if (_opcao == 0) {
+            alterarOpcaoAcima(_header, _opcao, "Cancelando...")
+            return
+        } else {
+            alterarOpcaoAcima(_header, _opcao, montadoraSelecionada.nome)
+        }
 
         // Criar o Modelo finalmente
+        cabecalho("Criar Novo Modelo");
         const nome = obter_texto("Nome: ");
         const id = ulid();
         const valorReferencia = obter_numero("Valor Ref.: ");
-        const motor = obter_numero("Num. Motorização: ");
-        let turbo = obter_numero("Turbo? 1 - SIM, 2 - NÃO");
+        alterarOpcaoAcima("Valor Ref.:", "", `R$${valorReferencia.toFixed(2)}`);
+        subirLinha();
+        const motor = obter_numero("Motorizacao: (Exemplo: 1.0, 1.4): ");
+        let turbo = obter_numero("Turbo? 1 - SIM, 2 - NAO: ");
         turbo = (turbo == 1) ? true : false;
-        let automatico = obter_numero("Automatico? 1 - SIM, 2 - NÃO");
+        let automatico = obter_numero("Automatico? 1 - SIM, 2 - NAO: ");
         automatico = (automatico == 1) ? true : false;
 
         const novoModelo = {
@@ -315,12 +329,17 @@ export function criarModelo() {
         salvarMontadoras(_montadoras);
         console.log(`Modelo ${novoModelo.nome} adicionado na montadora ${montadoraSelecionada.nome}.`);
     } else {
-        mostrar_texto("Não ha montadoras cadastradas.")
+        mostrar_texto_centralizado("Não ha montadoras cadastradas.");
     }
 }
 
 export function listarModelos() {
     let _montadoras = lerMontadoras();
+
+    if (_montadoras.length == 0) {
+        mostrar_texto_centralizado("Não há montadoras cadastradas");
+        return
+    }
 
     mostrar_texto("Qual montadora?");
     for (var i = 0; i < _montadoras.length; i++) {
@@ -332,9 +351,18 @@ export function listarModelos() {
         mostrar_texto(`${i + 1} - ${_montadoras[i].nome} ${_textoAdicional}`);
     }
 
-    let opcao = obter_numero();
+    var _header = "Montadora: "
+    let opcao = -1;
+    while (opcao < 0 || opcao > _montadoras.length) {
+        opcao = obter_numero(_header);
+    }
+    if (opcao == 0) {
+        alterarOpcaoAcima(_header, opcao, "Cancelando...");
+    }
+
     // Referencia do Registro da Montadora
     const montadoraSelecionada = _montadoras[opcao - 1];
+    alterarOpcaoAcima(_header, opcao, `${montadoraSelecionada.nome}`);
 
     // Mostrar os modelos dela finalmente
     if (montadoraSelecionada.modelos.length > 0) {
@@ -354,22 +382,28 @@ export function listarModelos() {
             console.log();
         }
     } else {
-        console.log("Não temos modelos nesta montadora. :(")
+        mostrar_texto_centralizado("Não há modelos cadastrados nessa montadora.")
     }
 }
 
 export function removerModelo() {
     var montadoras = lerMontadoras();
     mostrar_texto("Qual montadora?");
+    
     for (var i = 0; i < montadoras.length; i++) {
-        mostrar_texto(`${i + 1} - ${montadoras[i].nome}`)
+        var _textoAdicional = "";
+        var _qntModelos = montadoras[i].modelos.length;
+        if (_qntModelos > 0) {
+            _textoAdicional = `(${_qntModelos} modelo${(_qntModelos > 1) ? "s" : ""})`;
+        }
+        mostrar_texto(`${i + 1} - ${montadoras[i].nome} ${_textoAdicional}`);
     }
 
     var opcao = -1;
     var montadoraSelecionada = -1;
     var _header = "Opcao: "
     while (opcao < 0 || opcao > montadoras.length) {
-       opcao = obter_numero(_header);
+        opcao = obter_numero(_header);  
     }
 
     if (opcao == 0) {
@@ -377,22 +411,39 @@ export function removerModelo() {
         return 
     }
     montadoraSelecionada = montadoras[opcao - 1];
+    alterarOpcaoAcima(_header, opcao, montadoraSelecionada.nome);
+
+    // Checar se há modelos
+    if (montadoraSelecionada.modelos.length == 0) {
+        mostrar_texto_centralizado(`A montadora ${montadoraSelecionada.nome} não possui modelos criados.`);
+        return
+    }
 
     mostrar_texto("Qual modelo deseja remover?");
 
     for (var i = 0; i < montadoraSelecionada.modelos.length; i++) {
         mostrar_texto(`${i+1} - ${montadoraSelecionada.modelos[i].nome}`);
     }
+    mostrar_texto(`0 - Sair`)
 
     var opcao = -1;
-    opcao = obter_numero("Opcao: ");
+    while (opcao < 0 || opcao > montadoraSelecionada.modelos.length) {
+        opcao = obter_numero("Opcao: ");
+    }
+
+    if (opcao == 0) {
+        alterarOpcaoAcima(_header, opcao, "Cancelando...");
+        return 
+    }
+
     var modeloSelecionado = montadoraSelecionada.modelos[opcao - 1];
+    alterarOpcaoAcima(_header, opcao, `${modeloSelecionado.nome}`);
 
     var nomeModeloRemovido = modeloSelecionado.nome;
     var idModeloRemovido = modeloSelecionado.id;
 
     montadoraSelecionada.modelos.splice(opcao - 1, 1);
-    mostrar_texto(`${nomeModeloRemovido} removido da montadora ${montadoraSelecionada.nome}.`);
+    mostrar_texto_centralizado(`${nomeModeloRemovido} removido da montadora ${montadoraSelecionada.nome}.`);
 
     removerModeloDoArquivo(idModeloRemovido);
 
