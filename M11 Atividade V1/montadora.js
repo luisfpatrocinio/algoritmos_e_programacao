@@ -22,16 +22,61 @@ import {
     obter_numero,
     tam,
     obter_largura_da_tela,
+    obter_altura_da_tela,   
     repetir_string,
     enter_para_limpar_terminal,
-    despedida
+    despedida,
+    cabecalho
 } from "./generalUtils.js";
 
 import {
-    
-} from "./montadoraUtils.js";
+    drawCar, setCursorPosition
+} from "./visualUtils.js";
 
-function main() {
+let carroX = 0;
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
+async function introAnimation() {
+    let playedIntro = false;
+    while (!playedIntro) {
+        limpar_terminal();
+        setCursorPosition(0, obter_altura_da_tela()/2);
+        console.log();
+        var _header = "PatroCars";
+        var _headerLen = Math.min(- obter_largura_da_tela()/2 + carroX, _header.length);
+        if (_headerLen > 0) {
+            cabecalho(_header.slice(_header.length - _headerLen));
+        }
+        carroX ++;
+        if (carroX < obter_largura_da_tela()) {
+           drawCar(carroX, obter_altura_da_tela() - 5);
+        }
+        setCursorPosition(obter_largura_da_tela(), obter_altura_da_tela());
+        if (carroX >= obter_largura_da_tela()) {
+            playedIntro = true;
+        } else {
+            // ESPERAR TEMPO
+            await sleep(4);
+        }
+    }
+    
+    var _enterKey = "[PRESS START]";
+    setCursorPosition(
+        Math.floor(obter_largura_da_tela()/2 - _enterKey.length/2 + 1), 
+        Math.floor(obter_altura_da_tela()/2 + 2)
+        );
+    process.stdout.write(_enterKey);
+    obter_texto('');
+}
+
+async function main() {
+    await introAnimation();
+
     let opcao = -1;
     while (opcao != 0) {
         let _opcaoSelecionada = 0;
@@ -41,6 +86,7 @@ function main() {
         var _tam = obter_largura_da_tela() / 10 - tam("Opcao: ");
         let _pontos = repetir_string(".", _tam);
         opcao = obter_numero(`${_pontos} Opcao: `);
+
         process.stdout.write('\x1b[1A');
         console.log(`${_pontos} Opcao: ${opcao} - ${obterNomeDoItemDoMenuPeloNumero(opcao)}`);
         console.log();
@@ -58,5 +104,7 @@ function main() {
     }
 
 }
+
+
 
 main();

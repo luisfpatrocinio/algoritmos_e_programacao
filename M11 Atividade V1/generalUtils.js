@@ -42,6 +42,10 @@ export function obter_largura_da_tela() {
     return process.stdout.columns;
 }
 
+export function obter_altura_da_tela() {
+    return process.stdout.rows;
+}
+
 export function repetir_string(_string, _vezes) {
     let novaStr = "";
     let i = 0;
