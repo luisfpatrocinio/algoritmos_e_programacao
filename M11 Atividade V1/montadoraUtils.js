@@ -1,6 +1,7 @@
 import { ulid } from "ulidx";
 import { question } from "readline-sync";
 import fs from "fs";
+import { obterNomeDoItemDoMenuPeloNumero } from "./montadoraMenuFunctions.js";
 
 // Constantes:
 const arquivoMenu = "opcoes.txt"
@@ -53,6 +54,7 @@ export function lerMontadoras() {
 
         // Adicionar modelos nas montadoras
         const modelos = lerModelos();
+        const modelosToSave = [];
 
         // Percorrer todos os modelos
         for (let i = 0; i < modelos.length; i++) {
@@ -62,9 +64,13 @@ export function lerMontadoras() {
             for (let j = 0; j < montadoras.length; j++) {
                 if (montadoras[j].id == modeloID) {
                     montadoras[j].modelos.push(modelos[i]);
+                    modelosToSave.push(modelos[i]);
                 }
             }
         }
+
+        // Após atribuir todos os modelos às montadoras, salvar lista de modelos a partir delas
+        salvarModelos(modelosToSave);
     }
     catch (err) {
         console.log("###");
@@ -130,6 +136,8 @@ export function salvarModelos(modelos) {
         
     fs.writeFileSync("modelos.txt", _texto);
 }
+
+
 
 // Visual
 export function alterarOpcaoAcima(_header, _opcao, nomeDaOpcao) {

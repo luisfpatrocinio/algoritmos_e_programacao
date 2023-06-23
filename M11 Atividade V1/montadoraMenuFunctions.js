@@ -13,6 +13,9 @@ import { limpar_terminal,
 import { ulid } from "ulidx";
 import { salvarMontadoras, lerMontadoras, salvarModelos, lerModelos,
     alterarOpcaoAcima, adicionarModelo, removerModeloDoArquivo, subirLinha, apagarUltimaLinha } from "./montadoraUtils.js";
+
+import chalk from "chalk";
+
 const arquivoMenu = "opcoes.txt";
 
 // Principal:
@@ -25,13 +28,37 @@ export function mostrarMenu(_selecionada) {
     if (numeroDeMontadoras > 0) {
         mostrar_texto_centralizado(`${numeroDeMontadoras} montadoras cadastradas.`)
     }
+    
     let montadoras = lerMontadoras();
 
     let _qntPontos = obter_largura_da_tela() / 10;
     let _pontos = repetir_string(".", _qntPontos)
     for (let i = 0; i < opcoes.length; i++) {
         let _textoDaOpcao = opcoes[i].split("#")[0];
-        mostrar_texto(`${_pontos} ${i + 1} - ${_textoDaOpcao}`);
+        let _textoTotal = `${_pontos} ${i + 1} - ${_textoDaOpcao}`;
+
+        let _atribuirCor = function(_cor, _texto) {
+            if (_cor == "branco") {
+                return chalk.white(_texto);
+            } else if (_cor == "cinza") {
+                return chalk.gray(_texto);
+            }
+        }
+
+        var _existeMontadoras = (montadoras.length > 0) ? 1 : 0;
+        var _modelos = lerModelos();
+        var _existeModelos = (_modelos.length > 0) ? 1 : 0;            
+
+        var _cor = "branco";
+        var _hierarquiaAtual = _existeMontadoras + _existeModelos;
+        var _hierarquiaDaOpcao = opcoes[i].split("#")[2];
+        if (_hierarquiaAtual >= _hierarquiaDaOpcao) {
+            _cor = "branco";
+        } else {
+            _cor = "cinza";
+        }
+
+        mostrar_texto(_atribuirCor(_cor, _textoTotal));
     }
     mostrar_texto(`${_pontos} 0 - Sair`);
 }
@@ -44,7 +71,11 @@ export function lerOpcoesDoMenu() {
         return opcoes;
     }
 }
-
+/**
+ * @description Retorna o nome do item do Menu a partir do seu número
+ * @param {Number} _numero Número do item
+ * @returns 
+ */
 export function obterNomeDoItemDoMenuPeloNumero(_numero) {
     if (_numero == 0) {
         return "Sair";
@@ -78,6 +109,8 @@ export function executarFuncaoViaString(_funcao) {
 
 // Montadoras:
 export function criarMontadora() {
+
+    //TODO: Conferir se os textos sao vazios
     let _nome = obter_texto("Digite o nome da montadora: ").trim();
     let _nacionalidade = obter_texto("Qual a nacionalidade da montadora? ").trim();
     let _anoFundacao = obter_numero("Qual o ano de fundacao da montadora? ");
@@ -335,9 +368,14 @@ export function criarModelo() {
 
 export function listarModelos() {
     let _montadoras = lerMontadoras();
-
     if (_montadoras.length == 0) {
         mostrar_texto_centralizado("Não há montadoras cadastradas");
+        return
+    }
+
+    var modelos = lerModelos();
+    if (modelos.length == 0) {
+        mostrar_texto_centralizado("Nao ha modelos cadastrados em nenhuma montadora.");
         return
     }
 
@@ -387,6 +425,11 @@ export function listarModelos() {
 }
 
 export function removerModelo() {
+    var modelos = lerModelos();
+    if (modelos.length == 0) {
+        mostrar_texto_centralizado("Nao ha modelos cadastrados em nenhuma montadora.");
+        return
+    }
     var montadoras = lerMontadoras();
     mostrar_texto("Qual montadora?");
     

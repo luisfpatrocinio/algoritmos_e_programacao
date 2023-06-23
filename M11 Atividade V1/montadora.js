@@ -45,7 +45,7 @@ async function introAnimation() {
     let playedIntro = false;
     while (!playedIntro) {
         limpar_terminal();
-        setCursorPosition(0, obter_altura_da_tela()/2);
+        setCursorPosition(0, Math.floor(obter_altura_da_tela()/2));
         console.log();
         var _header = "PatroCars";
         var _headerLen = Math.min(- obter_largura_da_tela()/2 + carroX, _header.length);
@@ -104,7 +104,5 @@ async function main() {
     }
 
 }
-
-
 
 main();
